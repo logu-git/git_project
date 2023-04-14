@@ -1,17 +1,47 @@
 pipeline {
     agent any
-
     stages {
-        stage('Input') {
-            steps {
-                input('Do you want to proceed?')
-            }
+        stage('One') {
+                steps {
+                        echo 'Hi, this is Zulaikha from edureka'
+			
+                }
         }
-
-        stage('If Proceed is clicked') {
-            steps {
-                print('hello')
-            }
+	    stage('Two'){
+		    
+		steps {
+			input('Do you want to proceed?')
+        }
+	    }
+        stage('Three') {
+                when {
+                        not {
+                                branch "master"
+                        }
+                }
+                steps {
+			echo "Hello"
+                        }
+        }
+        stage('Four') {
+                parallel {
+                        stage('Unit Test') {
+                                steps{
+                                        echo "Running the unit test..."
+                                }
+                        }
+                        stage('Integration test') {
+                        agent {
+                                Linux_Node {
+                                        reuseNode false
+					image 'ubuntu'
+                                        }
+			}
+				steps {
+					echo 'Running the integration test..'
+				}
+                               
+			}  }
         }
     }
 }
